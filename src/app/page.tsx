@@ -4,174 +4,177 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '@/store/gameStore';
 import { useRouter } from 'next/navigation';
-import ConsoleEasterEgg from '@/components/ConsoleEasterEgg';
-import JumpscareModal from '@/components/JumpscareModal';
-import StoryBriefing from '@/components/StoryBriefing';
-import { Lock, Unlock, CheckCircle } from 'lucide-react';
+import HintModal from '@/components/HintModal';
+import LoginModal from '@/components/LoginModal';
+import { Lock, Unlock, Heart, Star } from 'lucide-react';
 
 export default function Home() {
-  const [password, setPassword] = useState('');
   const [mounted, setMounted] = useState(false);
-  const [pawPrints, setPawPrints] = useState<{id: number, x: number, delay: number, duration: number}[]>([]);
-  const [showBriefing, setShowBriefing] = useState(false);
-  
-  const { 
-    levels, 
-    checkTimeLocks, 
-    unlockLevel, 
+  const [showHint, setShowHint] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const handleShowHint = () => {
+    setShowLogin(false); // Close login modal when showing hint
+    setShowHint(true);
+  };
+
+  const handleCloseHint = () => {
+    setShowHint(false);
+    setShowLogin(true); // Reopen login modal when closing hint
+  };
+
+  const {
+    levels,
+    checkTimeLocks,
     incrementFailedAttempts,
-    unlockedLevels 
+    unlockLevel
   } = useGameStore();
-  
+
   const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
     checkTimeLocks();
-    
-    // Paw prints animation setup
-    const prints = Array.from({ length: 20 }).map((_, i) => ({
-      id: i,
-      x: Math.random() * 1000,
-      delay: Math.random() * 5,
-      duration: 10 + Math.random() * 10
-    }));
-    setPawPrints(prints);
   }, [checkTimeLocks]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password.toLowerCase() === 'canela') {
-      unlockLevel(2); // Unlocks level 2 mechanically
-      setShowBriefing(true); // Show briefing for Level 1 completion/Level 2 intro context
-    } else {
-      incrementFailedAttempts();
-      const form = document.getElementById('login-form');
-      form?.classList.add('animate-shake');
-      setTimeout(() => form?.classList.remove('animate-shake'), 500);
-    }
+  const handleLoginSubmit = (password: string) => {
+    setIsTyping(true);
+
+    // Simulate processing delay
+    setTimeout(() => {
+      setIsTyping(false);
+      if (password.toLowerCase() === 'canela') {
+        unlockLevel(1);
+        router.push('/level-1');
+      } else {
+        incrementFailedAttempts();
+        const form = document.getElementById('login-form');
+        form?.classList.add('animate-shake');
+        setTimeout(() => form?.classList.remove('animate-shake'), 500);
+      }
+    }, 800);
   };
 
   const handleLevelClick = (levelId: number) => {
     const level = levels.find(l => l.id === levelId);
     if (!level) return;
 
-    if (level.isLocked) {
-      alert(`Mission Locked until ${level.unlockDate}`);
+    // Level 1 always requires password
+    if (levelId === 1) {
+      setShowLogin(true);
       return;
     }
 
-    if (levelId === 1) {
-      // Level 1 is the dashboard itself/password check, so we don't navigate away
-      return; 
+    // Other levels
+    if (level.isLocked) {
+      return;
     }
 
     router.push(`/level-${levelId}`);
   };
 
-  return (
-    <main className="min-h-screen bg-black text-white p-4 md:p-8 relative overflow-hidden">
-      <ConsoleEasterEgg />
-      <JumpscareModal />
-      
-      {/* Background with animated paw prints */}
-      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none overflow-hidden">
-        {mounted && pawPrints.map((paw) => (
-          <motion.div
-            key={paw.id}
-            initial={{ y: -100, x: paw.x, opacity: 0 }}
-            animate={{ y: 1000, opacity: 1 }}
-            transition={{ 
-              duration: paw.duration, 
-              repeat: Infinity,
-              delay: paw.delay 
-            }}
-            className="absolute text-4xl"
-          >
-            🐾
-          </motion.div>
-        ))}
-      </div>
+  if (!mounted) return null;
 
-      <div className="relative z-10 max-w-4xl mx-auto">
-        <header className="mb-12 text-center">
-          <h1 className="text-5xl md:text-7xl font-black text-neon-green mb-4 animate-glitch">
-            MISSION CONTROL
-          </h1>
-          <p className="text-xl text-gray-400 font-mono">
-            AGENT: CLARA // STATUS: ACTIVE
-          </p>
+  return (
+    <main className="min-h-screen bg-warm-cream text-gray-800 p-4 md:p-8 relative overflow-hidden font-sans flex flex-col items-center justify-center">
+      <HintModal isOpen={showHint} onClose={handleCloseHint} levelId={1} />
+      <LoginModal
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
+        onSubmit={handleLoginSubmit}
+        onHint={handleShowHint}
+        isTyping={isTyping}
+      />
+
+      {/* Snowflakes */}
+      <div className="snowflake">❄</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
+      <div className="snowflake">❄</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
+      <div className="snowflake">❄</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
+      <div className="snowflake">❄</div>
+
+      <div className="relative z-10 max-w-4xl mx-auto w-full">
+        <header className="mb-12 text-center relative">
+          <motion.div
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1 }}
+            className="inline-block"
+          >
+            <div className="flex justify-center mb-4">
+              <Star className="text-christmas-gold w-12 h-12 fill-current animate-spin-slow" />
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold text-christmas-red tracking-tight mb-2 font-serif text-shadow-sm">
+              Regalos para Clara
+            </h1>
+            <p className="text-xl text-christmas-green italic">
+              Una Navidad llena de sorpresas
+            </p>
+          </motion.div>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Level 1: The Gatekeeper */}
-          <div className="col-span-1 md:col-span-2 bg-white/5 border-2 border-neon-green p-6 backdrop-blur-sm">
-            <div className="flex justify-between items-start mb-4">
-              <h2 className="text-2xl font-bold text-hot-pink">01. OPERACIÓN CANELA</h2>
-              {unlockedLevels.includes(2) ? <CheckCircle className="text-neon-green" /> : <Unlock className="text-white" />}
+        <div className="flex justify-center">
+          {/* Advent Calendar */}
+          <div className="w-full max-w-2xl">
+            <div className="grid grid-cols-2 gap-6 md:gap-8">
+              {levels.map((level, index) => {
+                // Level 1 is always "available" (not grayed out) but requires password
+                const isLevel1 = level.id === 1;
+                const isAvailable = isLevel1 || !level.isLocked;
+                
+                return (
+                  <motion.div
+                    key={level.id}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.2 * index }}
+                    onClick={() => handleLevelClick(level.id)}
+                    className={`
+                      relative aspect-square rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300
+                      ${isAvailable
+                        ? 'bg-christmas-red text-white shadow-lg hover:scale-105 hover:rotate-1'
+                        : 'bg-gray-200 text-gray-400 hover:bg-gray-300'}
+                    `}
+                  >
+                    {/* Ribbon for available levels */}
+                    {isAvailable && (
+                      <>
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-full bg-christmas-green/20 pointer-events-none"></div>
+                        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-8 bg-christmas-green/20 pointer-events-none"></div>
+                      </>
+                    )}
+
+                    <div className="relative z-10">
+                      <span className="text-5xl md:text-6xl font-bold mb-2 block">{level.id}</span>
+                      <span className="text-xs md:text-sm font-bold uppercase tracking-wider">
+                        {isLevel1 ? 'DISPONIBLE' : level.isLocked ? 'CERRADO' : 'ABIERTO'}
+                      </span>
+                    </div>
+
+                    {isAvailable ? (
+                      <Unlock className="absolute top-4 right-4 w-6 h-6 opacity-80" />
+                    ) : (
+                      <Lock className="absolute top-4 right-4 w-6 h-6 opacity-50" />
+                    )}
+                  </motion.div>
+                );
+              })}
             </div>
-            
-            {!unlockedLevels.includes(2) ? (
-              <form id="login-form" onSubmit={handleSubmit} className="space-y-4">
-                <p className="text-gray-300 font-mono text-sm">AUTHENTICATION REQUIRED</p>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="flex-1 bg-black border border-gray-600 p-2 text-white font-mono focus:border-neon-green outline-none"
-                    placeholder="PASSWORD"
-                  />
-                  <button type="submit" className="bg-neon-green text-black px-6 font-bold hover:bg-white transition-colors">
-                    ACCESS
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <div className="text-neon-green font-mono">
-                ACCESS GRANTED. SYSTEM UNLOCKED.
-              </div>
-            )}
           </div>
-
-          {/* Other Levels */}
-          {levels.slice(1).map((level) => (
-            <motion.div
-              key={level.id}
-              whileHover={{ scale: 1.02 }}
-              onClick={() => handleLevelClick(level.id)}
-              className={`
-                relative p-6 border-2 transition-all cursor-pointer
-                ${level.isLocked 
-                  ? 'border-gray-800 bg-gray-900/50 opacity-75 grayscale' 
-                  : 'border-white bg-white/10 hover:border-hot-pink hover:shadow-[4px_4px_0px_0px_#ff0099]'}
-              `}
-            >
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-xl font-bold">0{level.id}. {level.title}</h2>
-                {level.isLocked ? <Lock className="text-gray-500" /> : <Unlock className="text-neon-green" />}
-              </div>
-              
-              <div className="font-mono text-sm text-gray-400">
-                {level.isLocked ? (
-                  <span>LOCKED UNTIL: {level.unlockDate}</span>
-                ) : (
-                  <span>STATUS: AVAILABLE</span>
-                )}
-              </div>
-            </motion.div>
-          ))}
         </div>
-      </div>
 
-      {/* Story Briefing for Level 1 Success */}
-      <StoryBriefing 
-        isOpen={showBriefing}
-        onClose={() => setShowBriefing(false)}
-        title="OPERACIÓN CANELA"
-        briefing="Acceso concedido. Los sistemas de seguridad han sido neutralizados. Sin embargo, la señal está encriptada y fragmentada en diferentes frecuencias."
-        realLifeClue="Tu primer regalo está donde guardas lo más preciado: tu ropa favorita."
-      />
+        <footer className="mt-16 text-center text-sm text-gray-400">
+          <p className="flex items-center justify-center gap-2">
+            Hecho con mucho <Heart size={16} className="text-christmas-red fill-current animate-pulse" /> para ti
+          </p>
+        </footer>
+      </div>
     </main>
   );
 }

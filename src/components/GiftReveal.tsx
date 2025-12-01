@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import TrapButton from './TrapButton';
 
 interface GiftRevealProps {
   isOpen: boolean;
@@ -45,11 +44,12 @@ export default function GiftReveal({
             </div>
 
             <div className="p-6 space-y-6">
-              <div className="relative aspect-video w-full border-4 border-black overflow-hidden bg-gray-100">
+              <div className="relative aspect-video w-full border-4 border-black overflow-hidden bg-gray-100 h-[300px]">
                 <Image
                   src={giftImage}
                   alt={giftName}
-                  fill
+                  width={500}
+                  height={500}
                   className="object-cover"
                 />
               </div>
@@ -60,12 +60,12 @@ export default function GiftReveal({
               </div>
 
               <div className="flex justify-center pt-4">
-                <TrapButton 
+                <button
                   onClick={onNextLevel || onClose}
-                  className="w-full !bg-neon-green !text-black hover:!bg-black hover:!text-neon-green"
+                  className="w-full bg-christmas-green text-white font-bold py-4 px-6 rounded-lg hover:bg-green-700 transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                 >
-                  {nextLevelUrl ? 'NEXT LEVEL ->' : 'CLAIM REWARD'}
-                </TrapButton>
+                  {nextLevelUrl ? 'SIGUIENTE NIVEL →' : 'CONTINUAR'}
+                </button>
               </div>
             </div>
           </motion.div>

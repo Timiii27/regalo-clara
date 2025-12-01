@@ -1,108 +1,49 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import confetti from 'canvas-confetti';
-import GiftReveal from '@/components/GiftReveal';
-import StoryBriefing from '@/components/StoryBriefing';
-import { useGameStore } from '@/store/gameStore';
 import { useRouter } from 'next/navigation';
+import { Gift, Lock, Calendar, Star } from 'lucide-react';
 
 export default function Level4() {
-  const [code, setCode] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [showBriefing, setShowBriefing] = useState(true);
-
-  const { levels, checkTimeLocks } = useGameStore();
   const router = useRouter();
-  const levelConfig = levels.find(l => l.id === 4);
-
-  useEffect(() => {
-    checkTimeLocks();
-    if (levelConfig?.isLocked) {
-      router.push('/');
-    }
-  }, [checkTimeLocks, levelConfig, router]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (code === '1225') {
-      setIsSuccess(true);
-      triggerConfetti();
-    }
-  };
-
-  const triggerConfetti = () => {
-    const duration = 15 * 1000;
-    const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-    const randomInRange = (min: number, max: number) => {
-      return Math.random() * (max - min) + min;
-    }
-
-    const interval: any = setInterval(function() {
-      const timeLeft = animationEnd - Date.now();
-
-      if (timeLeft <= 0) {
-        return clearInterval(interval);
-      }
-
-      const particleCount = 50 * (timeLeft / duration);
-      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
-      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
-    }, 250);
-  };
-
-  if (!levelConfig) return null;
 
   return (
-    <div className="min-h-screen bg-blue-900 flex flex-col items-center justify-center p-4 font-mono text-white">
-      <StoryBriefing 
-        isOpen={showBriefing}
-        onClose={() => setShowBriefing(false)}
-        title={levelConfig.title}
-        briefing={levelConfig.briefing}
-        realLifeClue={levelConfig.realLifeClue}
-      />
+    <div className="min-h-screen bg-warm-cream text-gray-800 flex flex-col items-center justify-center p-4 relative overflow-hidden font-sans">
+      {/* Snowflakes */}
+      <div className="snowflake">❄</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
+      <div className="snowflake">❄</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
 
-      <GiftReveal 
-        isOpen={isSuccess}
-        onClose={() => {}}
-        giftName="VIAJE A PARÍS"
-        giftImage="https://placehold.co/600x400/00f0ff/black?text=PARIS+TICKET"
-        description="Prepara las maletas porque nos vamos el 25 de Diciembre. Joyeux Noël!"
-      />
-
-      {!isSuccess && (
-        <div className="w-full max-w-2xl bg-white text-black p-8 rounded-lg shadow-2xl border-4 border-yellow-400">
-          <div className="flex justify-between items-center mb-8 border-b-2 border-black pb-4">
-            <h1 className="text-4xl font-bold uppercase tracking-tighter">Gate 12-25</h1>
-            <div className="text-xl animate-pulse text-red-600 font-bold">BOARDING NOW</div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="bg-gray-100 p-6 rounded border-2 border-dashed border-gray-400">
-              <label className="block text-sm font-bold uppercase mb-2">Flight Code</label>
-              <input 
-                type="text" 
-                maxLength={4}
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                className="w-full text-4xl text-center tracking-[1em] p-4 uppercase font-bold border-2 border-black focus:border-yellow-400 outline-none"
-                placeholder="____"
-              />
-            </div>
-            
-            <button 
-              type="submit"
-              className="w-full bg-blue-600 text-white font-bold py-4 text-xl uppercase hover:bg-blue-700 transition-colors border-b-4 border-blue-800 active:border-b-0 active:translate-y-1"
-            >
-              Check In
-            </button>
-          </form>
+      <div className="bg-white p-8 rounded-xl card-shadow border-t-4 border-christmas-gold max-w-md w-full text-center relative z-10">
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-christmas-gold text-white px-4 py-1 rounded-full text-sm font-bold shadow-md flex items-center gap-2">
+          <Lock size={14} />
+          REGALO CERRADO
         </div>
-      )}
+
+        <Star className="w-20 h-20 mx-auto text-christmas-gold mb-6 animate-spin-slow" />
+
+        <h1 className="text-3xl font-bold text-gray-700 mb-4 font-serif">
+          La Gran Sorpresa
+        </h1>
+
+        <p className="text-gray-500 mb-8 leading-relaxed">
+          Lo mejor se guarda para el final. Este regalo iluminará tu Navidad.
+        </p>
+
+        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 inline-flex items-center gap-3 text-sm text-gray-600 mb-8">
+          <Calendar className="text-christmas-red" size={18} />
+          <span>Disponible el <strong>25 de Diciembre</strong></span>
+        </div>
+
+        <button
+          onClick={() => router.push('/')}
+          className="w-full bg-christmas-gold text-white font-bold py-3 rounded-lg hover:bg-yellow-500 transition-colors shadow-md"
+        >
+          Volver al Calendario
+        </button>
+      </div>
     </div>
   );
 }

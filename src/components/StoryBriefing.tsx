@@ -11,12 +11,12 @@ interface StoryBriefingProps {
   realLifeClue: string;
 }
 
-export default function StoryBriefing({ 
-  isOpen, 
-  onClose, 
-  title, 
-  briefing, 
-  realLifeClue 
+export default function StoryBriefing({
+  isOpen,
+  onClose,
+  title,
+  briefing,
+  realLifeClue
 }: StoryBriefingProps) {
   return (
     <AnimatePresence>
@@ -34,11 +34,11 @@ export default function StoryBriefing({
             className="relative w-full max-w-2xl bg-black border-2 border-neon-green p-8 neo-brutal-shadow"
           >
             <div className="absolute top-0 left-0 bg-neon-green text-black px-4 py-1 font-bold text-sm uppercase tracking-widest">
-              TOP SECRET // EYES ONLY
+              TOP SECRET // SOLO OJOS
             </div>
 
             <h2 className="mt-8 text-4xl font-black text-white uppercase mb-6 border-b border-gray-800 pb-4">
-              MISSION: <span className="text-neon-green">{title}</span>
+              MISIÓN: <span className="text-neon-green">{title}</span>
             </h2>
 
             <div className="space-y-6 text-gray-300 font-mono leading-relaxed">
@@ -47,7 +47,7 @@ export default function StoryBriefing({
               </p>
 
               <div className="bg-white/5 p-4 border-l-4 border-hot-pink">
-                <h3 className="text-hot-pink font-bold uppercase text-sm mb-2">Real Life Intel:</h3>
+                <h3 className="text-hot-pink font-bold uppercase text-sm mb-2">Inteligencia Real:</h3>
                 <p className="italic text-white">
                   "{realLifeClue}"
                 </p>
@@ -55,11 +55,11 @@ export default function StoryBriefing({
             </div>
 
             <div className="mt-8 flex justify-end">
-              <TrapButton 
+              <TrapButton
                 onClick={onClose}
                 className="!bg-white !text-black hover:!bg-neon-green hover:!text-black"
               >
-                ACCEPT MISSION
+                ACEPTAR MISIÓN
               </TrapButton>
             </div>
           </motion.div>

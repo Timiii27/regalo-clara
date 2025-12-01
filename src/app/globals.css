@@ -1,25 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0a0a0a;
-  --color-foreground: #ededed;
+  --color-background: #fbfbfb;
+  --color-foreground: #2d3748;
   
-  --color-neon-green: #ccff00;
-  --color-hot-pink: #ff0099;
-  --color-electric-blue: #00f0ff;
-  --color-warning-yellow: #ffcc00;
+  --color-christmas-red: #ea4630;
+  --color-christmas-green: #146b3a;
+  --color-christmas-gold: #f8b229;
+  --color-snow-white: #ffffff;
+  --color-warm-cream: #fdfbf7;
   
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  --animate-glitch: glitch 1s linear infinite;
+  --animate-snow: snow 10s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
   --animate-shake: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-  --animate-vibrate: vibrate 0.3s linear infinite both;
+  --animate-spin-slow: spin 4s linear infinite;
 
-  @keyframes glitch {
-    2%, 64% { transform: translate(2px,0) skew(0deg); }
-    4%, 60% { transform: translate(-2px,0) skew(0deg); }
-    62% { transform: translate(0,0) skew(5deg); }
+  @keyframes snow {
+    0% { transform: translateY(-10px); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0.5; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
   }
 
   @keyframes shake {
@@ -29,33 +36,81 @@
     40%, 60% { transform: translate3d(4px, 0, 0); }
   }
 
-  @keyframes vibrate {
-    0% { transform: translate(0); }
-    20% { transform: translate(-2px, 2px); }
-    40% { transform: translate(-2px, -2px); }
-    60% { transform: translate(2px, 2px); }
-    80% { transform: translate(2px, -2px); }
-    100% { transform: translate(0); }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 }
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #fdfbf7;
+  --foreground: #2d3748;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), sans-serif;
   overflow-x: hidden;
 }
 
-/* Custom Utilities */
-.neo-brutal-shadow {
-  box-shadow: 4px 4px 0px 0px var(--color-hot-pink);
+.animate-spin-slow {
+  animation: spin 4s linear infinite;
 }
 
-.neo-brutal-border {
-  border: 2px solid var(--color-foreground);
+.animate-shake {
+  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* Snow Effect */
+.snowflake {
+  position: absolute;
+  top: -10px;
+  color: #d1d5db;
+  font-size: 1em;
+  font-family: Arial;
+  text-shadow: 0 0 1px #000;
+  animation: snow 10s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.snowflake:nth-child(1) { left: 10%; animation-duration: 10s; animation-delay: 0s; }
+.snowflake:nth-child(2) { left: 20%; animation-duration: 6s; animation-delay: 1s; }
+.snowflake:nth-child(3) { left: 30%; animation-duration: 8s; animation-delay: 2s; }
+.snowflake:nth-child(4) { left: 40%; animation-duration: 12s; animation-delay: 0s; }
+.snowflake:nth-child(5) { left: 50%; animation-duration: 9s; animation-delay: 3s; }
+.snowflake:nth-child(6) { left: 60%; animation-duration: 7s; animation-delay: 1s; }
+.snowflake:nth-child(7) { left: 70%; animation-duration: 11s; animation-delay: 2s; }
+.snowflake:nth-child(8) { left: 80%; animation-duration: 13s; animation-delay: 0s; }
+.snowflake:nth-child(9) { left: 90%; animation-duration: 8s; animation-delay: 3s; }
+.snowflake:nth-child(10) { left: 95%; animation-duration: 10s; animation-delay: 1s; }
+
+/* Custom Utilities */
+.card-shadow {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.text-shadow-sm {
+  text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+}
+.snowflake:nth-child(6) { left: 60%; animation-duration: 9s; animation-delay: 1s; }
+.snowflake:nth-child(7) { left: 70%; animation-duration: 11s; animation-delay: 2s; }
+.snowflake:nth-child(8) { left: 80%; animation-duration: 6s; animation-delay: 0s; }
+.snowflake:nth-child(9) { left: 90%; animation-duration: 8s; animation-delay: 1s; }
+/* Custom Utilities */
+.christmas-card {
+  background: white;
+  border: 2px solid var(--color-christmas-red);
+  box-shadow: 8px 8px 0 rgba(196, 30, 58, 0.2);
+  border-radius: 12px;
+}
+
+.christmas-text {
+  font-family: var(--font-serif);
+  color: var(--color-christmas-red);
+}
+
+.gold-border {
+  border: 2px solid var(--color-christmas-gold);
 }

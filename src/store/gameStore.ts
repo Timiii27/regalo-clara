@@ -11,96 +11,98 @@ export interface LevelConfig {
 
 interface GameState {
   currentLevel: number;
-  isJumpscareActive: boolean;
   failedAttempts: number;
   unlockedLevels: number[];
-  
+  hintRequested: boolean;
+
   levels: LevelConfig[];
-  
+
   // Actions
   unlockLevel: (level: number) => void;
   incrementFailedAttempts: () => void;
-  triggerJumpscare: () => void;
-  resetJumpscare: () => void;
   resetGame: () => void;
   checkTimeLocks: () => void;
+  setHintRequested: (requested: boolean) => void;
 }
 
 const INITIAL_LEVELS: LevelConfig[] = [
   {
     id: 1,
-    title: "OPERACIÓN CANELA",
-    unlockDate: "2023-12-01", // Already unlocked
-    briefing: "Agente Clara, tu misión comienza ahora. El objetivo 'Canela' ha escondido el primer paquete. Necesitamos acceder al sistema central.",
-    realLifeClue: "La contraseña es el nombre de quien manda realmente en esta casa.",
-    isLocked: false
+    title: "EL PRIMER REGALO",
+    unlockDate: "2024-12-01", // Already unlocked
+    briefing: "¡Hola mi amor! La Navidad ha llegado antes de tiempo. Tu primer regalo te está esperando, pero primero debes encontrarlo.",
+    realLifeClue: "Busca en el lugar donde guardamos nuestros sueños (y las sábanas).",
+    isLocked: true
   },
   {
     id: 2,
-    title: "PAPARAZZI MODE",
-    unlockDate: "2023-12-10",
-    briefing: "Hemos interceptado una transmisión visual, pero está borrosa. Necesitamos tus habilidades fotográficas para enfocar la imagen.",
-    realLifeClue: "Busca debajo del sofá. Sí, donde se acumulan las pelusas.",
+    title: "DULCE ESPERA",
+    unlockDate: "2024-12-10",
+    briefing: "Este regalo aún se está horneando. Tendrás que esperar un poquito más para descubrir qué es.",
+    realLifeClue: "Paciencia, pequeña. Todo llega.",
     isLocked: true
   },
   {
     id: 3,
-    title: "DREAM WORLD",
-    unlockDate: "2023-12-18",
-    briefing: "La señal proviene del mundo de los sueños. Todo está oscuro y confuso. Usa tu linterna para encontrar la verdad entre las mentiras.",
-    realLifeClue: "Revisa el armario de la entrada. Al fondo, detrás de los abrigos.",
+    title: "BAJO EL MUÉRDAGO",
+    unlockDate: "2024-12-18",
+    briefing: "Un regalo especial para un momento especial. ¿Estás lista para brillar?",
+    realLifeClue: "Aún no puedes abrir este, ¡no hagas trampas!",
     isLocked: true
   },
   {
     id: 4,
-    title: "GATE 12-25",
-    unlockDate: "2023-12-25",
-    briefing: "Misión Final. El destino ha sido revelado. Prepárate para el despegue inmediato.",
-    realLifeClue: "El código de vuelo es la fecha de hoy.",
+    title: "LA GRAN SORPRESA",
+    unlockDate: "2024-12-25",
+    briefing: "El regalo final. La joya de la corona. Prepárate para algo inolvidable.",
+    realLifeClue: "Solo disponible en Nochebuena.",
     isLocked: true
   }
 ];
 
 export const useGameStore = create<GameState>((set, get) => ({
   currentLevel: 1,
-  isJumpscareActive: false,
   failedAttempts: 0,
-  unlockedLevels: [1],
+  unlockedLevels: [],
+  hintRequested: false,
   levels: INITIAL_LEVELS,
 
-  unlockLevel: (level) => set((state) => ({
-    unlockedLevels: [...new Set([...state.unlockedLevels, level])],
-    currentLevel: level
-  })),
+  setHintRequested: (requested) => set({ hintRequested: requested }),
 
-  incrementFailedAttempts: () => set((state) => {
-    const newAttempts = state.failedAttempts + 1;
-    if (newAttempts >= 3) {
-      return { failedAttempts: 0, isJumpscareActive: true };
-    }
-    return { failedAttempts: newAttempts };
+  unlockLevel: (levelId) => set((state) => {
+    const updatedLevels = state.levels.map(level =>
+      level.id === levelId ? { ...level, isLocked: false } : level
+    );
+
+    return {
+      unlockedLevels: [...new Set([...state.unlockedLevels, levelId])],
+      currentLevel: levelId,
+      levels: updatedLevels
+    };
   }),
 
-  triggerJumpscare: () => set({ isJumpscareActive: true }),
-  
-  resetJumpscare: () => set({ isJumpscareActive: false, failedAttempts: 0 }),
-  
+  incrementFailedAttempts: () => set((state) => ({
+    failedAttempts: state.failedAttempts + 1
+  })),
+
   resetGame: () => set({
     currentLevel: 1,
-    isJumpscareActive: false,
     failedAttempts: 0,
-    unlockedLevels: [1]
+    unlockedLevels: []
   }),
 
   checkTimeLocks: () => set((state) => {
     const now = new Date();
     let hasChanges = false;
-    
+
     const updatedLevels = state.levels.map(level => {
+      // Skip Level 1 as it is password protected
+      if (level.id === 1) return level;
+
       const unlockDate = new Date(level.unlockDate);
       const isTimeUnlocked = now >= unlockDate;
-      const shouldBeLocked = !isTimeUnlocked && level.id !== 1;
-      
+      const shouldBeLocked = !isTimeUnlocked;
+
       if (level.isLocked !== shouldBeLocked) {
         hasChanges = true;
         return { ...level, isLocked: shouldBeLocked };

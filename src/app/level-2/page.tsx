@@ -1,106 +1,48 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useGameStore } from '@/store/gameStore';
 import { useRouter } from 'next/navigation';
-import TrapButton from '@/components/TrapButton';
-import JumpscareModal from '@/components/JumpscareModal';
-import GiftReveal from '@/components/GiftReveal';
-import StoryBriefing from '@/components/StoryBriefing';
+import { Gift, Lock, Calendar } from 'lucide-react';
 
 export default function Level2() {
-  const [focusValue, setFocusValue] = useState(0);
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [showBriefing, setShowBriefing] = useState(true);
-  
-  const { unlockLevel, levels, checkTimeLocks } = useGameStore();
   const router = useRouter();
-  const levelConfig = levels.find(l => l.id === 2);
-
-  // Target value is 85mm (represented as 85 on slider 0-100)
-  const TARGET_VALUE = 85;
-  const TOLERANCE = 5;
-
-  useEffect(() => {
-    checkTimeLocks();
-    if (levelConfig?.isLocked) {
-      router.push('/');
-    }
-  }, [checkTimeLocks, levelConfig, router]);
-
-  useEffect(() => {
-    if (Math.abs(focusValue - TARGET_VALUE) <= TOLERANCE) {
-      setIsUnlocked(true);
-      unlockLevel(3);
-    } else {
-      setIsUnlocked(false);
-    }
-  }, [focusValue, unlockLevel]);
-
-  const blurAmount = Math.abs(focusValue - TARGET_VALUE) / 2;
-
-  if (!levelConfig) return null;
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-black flex flex-col items-center justify-center p-4">
-      <JumpscareModal />
-      
-      <StoryBriefing 
-        isOpen={showBriefing}
-        onClose={() => setShowBriefing(false)}
-        title={levelConfig.title}
-        briefing={levelConfig.briefing}
-        realLifeClue={levelConfig.realLifeClue}
-      />
+    <div className="min-h-screen bg-warm-cream text-gray-800 flex flex-col items-center justify-center p-4 relative overflow-hidden font-sans">
+      {/* Snowflakes */}
+      <div className="snowflake">❄</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
+      <div className="snowflake">❄</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
 
-      <GiftReveal 
-        isOpen={isUnlocked}
-        onClose={() => {}}
-        giftName="INSTAX MINI 12"
-        giftImage="https://placehold.co/600x400/ff0099/white?text=INSTAX+MINI"
-        description="Para capturar todos nuestros momentos juntos (y a la perra)."
-        nextLevelUrl="/level-3"
-        onNextLevel={() => router.push('/level-3')}
-      />
-      
-      {/* Background Image with Blur */}
-      <div 
-        className="absolute inset-0 z-0 transition-all duration-300 ease-out"
-        style={{ 
-          filter: `blur(${blurAmount}px)`,
-          backgroundImage: 'url(https://placehold.co/1920x1080/1a1a1a/white?text=CLUE:+UNDER+THE+COUCH)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      />
+      <div className="bg-white p-8 rounded-xl card-shadow border-t-4 border-christmas-green max-w-md w-full text-center relative z-10">
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-christmas-green text-white px-4 py-1 rounded-full text-sm font-bold shadow-md flex items-center gap-2">
+          <Lock size={14} />
+          REGALO CERRADO
+        </div>
 
-      {/* UI Overlay */}
-      <div className={`relative z-10 w-full max-w-md bg-black/50 backdrop-blur-sm p-8 border-2 border-neon-green neo-brutal-shadow transition-opacity duration-500 ${isUnlocked ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-        <h1 className="text-4xl font-black text-neon-green mb-8 text-center animate-pulse">
-          LEVEL 2: PAPARAZZI
+        <Gift className="w-20 h-20 mx-auto text-gray-300 mb-6" />
+
+        <h1 className="text-3xl font-bold text-gray-700 mb-4 font-serif">
+          ¡Shhh! No espíes
         </h1>
 
-        <div className="space-y-6">
-          <label className="block text-white font-mono text-sm uppercase tracking-widest">
-            Focus Lens: {focusValue}mm
-          </label>
-          
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={focusValue}
-            onChange={(e) => setFocusValue(Number(e.target.value))}
-            className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-neon-green"
-          />
-          
-          <div className="flex justify-between text-xs text-gray-400 font-mono">
-            <span>0mm</span>
-            <span>50mm</span>
-            <span>100mm</span>
-          </div>
+        <p className="text-gray-500 mb-8 leading-relaxed">
+          Este regalo se está horneando con mucho amor. Tendrás que esperar un poquito más para descubrir qué es.
+        </p>
+
+        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 inline-flex items-center gap-3 text-sm text-gray-600 mb-8">
+          <Calendar className="text-christmas-red" size={18} />
+          <span>Disponible el <strong>10 de Diciembre</strong></span>
         </div>
+
+        <button
+          onClick={() => router.push('/')}
+          className="w-full bg-christmas-green text-white font-bold py-3 rounded-lg hover:bg-green-700 transition-colors shadow-md"
+        >
+          Volver al Calendario
+        </button>
       </div>
     </div>
   );
