@@ -27,15 +27,28 @@ interface Challenge {
 
 // Efecto de nieve
 const Snowfall = () => {
+  const [dimensions, setDimensions] = useState({ width: 1000, height: 1000 });
+
+  useEffect(() => {
+    setDimensions({ width: window.innerWidth, height: window.innerHeight });
+    
+    const handleResize = () => {
+      setDimensions({ width: window.innerWidth, height: window.innerHeight });
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="fixed inset-0 pointer-events-none z-0">
       {[...Array(20)].map((_, i) => (
         <motion.div
           key={i}
-          initial={{ y: -10, x: Math.random() * window.innerWidth }}
+          initial={{ y: -10, x: Math.random() * dimensions.width }}
           animate={{ 
-            y: window.innerHeight + 10, 
-            x: Math.random() * window.innerWidth 
+            y: dimensions.height + 10, 
+            x: Math.random() * dimensions.width 
           }}
           transition={{ 
             duration: Math.random() * 5 + 5, 
