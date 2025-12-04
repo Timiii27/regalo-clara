@@ -29,23 +29,23 @@ const INITIAL_LEVELS: LevelConfig[] = [
   {
     id: 1,
     title: "EL PRIMER REGALO",
-    unlockDate: "2024-12-01", // Already unlocked
+    unlockDate: "2025-12-01", // Already unlocked
     briefing: "¡Hola mi amor! La Navidad ha llegado antes de tiempo. Tu primer regalo te está esperando, pero primero debes encontrarlo.",
     realLifeClue: "Busca en el lugar donde guardamos nuestros sueños (y las sábanas).",
     isLocked: true
   },
   {
     id: 2,
-    title: "DULCE ESPERA",
-    unlockDate: "2024-12-10",
-    briefing: "Este regalo aún se está horneando. Tendrás que esperar un poquito más para descubrir qué es.",
-    realLifeClue: "Paciencia, pequeña. Todo llega.",
+    title: "OPERACIÓN BAJO CERO",
+    unlockDate: "2025-12-05",
+    briefing: "Agente Sherlocka, la siguiente pista está fragmentada. Necesitamos que recuperes dos palabras clave y realices una misión de campo. Prepárate para pasar un poco de... temperatura.",
+    realLifeClue: "Todo empieza con una sopa... de letras.",
     isLocked: true
   },
   {
     id: 3,
     title: "BAJO EL MUÉRDAGO",
-    unlockDate: "2024-12-18",
+    unlockDate: "2025-12-18",
     briefing: "Un regalo especial para un momento especial. ¿Estás lista para brillar?",
     realLifeClue: "Aún no puedes abrir este, ¡no hagas trampas!",
     isLocked: true
@@ -53,7 +53,7 @@ const INITIAL_LEVELS: LevelConfig[] = [
   {
     id: 4,
     title: "LA GRAN SORPRESA",
-    unlockDate: "2024-12-25",
+    unlockDate: "2025-12-25",
     briefing: "El regalo final. La joya de la corona. Prepárate para algo inolvidable.",
     realLifeClue: "Solo disponible en Nochebuena.",
     isLocked: true

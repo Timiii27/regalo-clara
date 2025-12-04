@@ -44,12 +44,12 @@ export default function GiftReveal({
             </div>
 
             <div className="p-6 space-y-6">
-              <div className="relative aspect-video w-full border-4 border-black overflow-hidden bg-gray-100 h-[300px]">
+              <div className="relative aspect-video w-full overflow-hidden bg-gray-100 h-[600px] p-2">
                 <Image
                   src={giftImage}
                   alt={giftName}
-                  width={500}
-                  height={500}
+                  width={600}
+                  height={600}
                   className="object-cover"
                 />
               </div>

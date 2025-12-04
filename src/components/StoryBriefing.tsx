@@ -1,7 +1,6 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import TrapButton from './TrapButton';
 
 interface StoryBriefingProps {
   isOpen: boolean;
@@ -31,36 +30,36 @@ export default function StoryBriefing({
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
-            className="relative w-full max-w-2xl bg-black border-2 border-neon-green p-8 neo-brutal-shadow"
+            className="relative w-full max-w-2xl bg-white border-4 border-christmas-red p-8 rounded-lg shadow-2xl"
           >
-            <div className="absolute top-0 left-0 bg-neon-green text-black px-4 py-1 font-bold text-sm uppercase tracking-widest">
-              TOP SECRET // SOLO OJOS
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-christmas-red text-white px-6 py-2 font-bold text-sm uppercase tracking-widest rounded-full shadow-md">
+              🎄 TOP SECRET 🎄
             </div>
 
-            <h2 className="mt-8 text-4xl font-black text-white uppercase mb-6 border-b border-gray-800 pb-4">
-              MISIÓN: <span className="text-neon-green">{title}</span>
+            <h2 className="mt-8 text-4xl font-black text-christmas-red uppercase mb-6 border-b-4 border-christmas-gold pb-4 font-serif">
+              MISIÓN: <span className="text-christmas-green">{title}</span>
             </h2>
 
-            <div className="space-y-6 text-gray-300 font-mono leading-relaxed">
+            <div className="space-y-6 text-gray-700 font-mono leading-relaxed">
               <p className="text-lg">
                 {briefing}
               </p>
 
-              <div className="bg-white/5 p-4 border-l-4 border-hot-pink">
-                <h3 className="text-hot-pink font-bold uppercase text-sm mb-2">Inteligencia Real:</h3>
-                <p className="italic text-white">
+              <div className="bg-christmas-green/10 p-4 border-l-4 border-christmas-green rounded">
+                <h3 className="text-christmas-green font-bold uppercase text-sm mb-2">🎁 Inteligencia Real:</h3>
+                <p className="italic text-gray-800 font-semibold">
                   "{realLifeClue}"
                 </p>
               </div>
             </div>
 
             <div className="mt-8 flex justify-end">
-              <TrapButton
+              <button
                 onClick={onClose}
-                className="!bg-white !text-black hover:!bg-neon-green hover:!text-black"
+                className="bg-christmas-red text-white px-8 py-3 font-black text-lg rounded-lg hover:bg-christmas-green transition-colors shadow-md uppercase"
               >
-                ACEPTAR MISIÓN
-              </TrapButton>
+                ✓ ACEPTAR MISIÓN
+              </button>
             </div>
           </motion.div>
         </motion.div>
