@@ -35,7 +35,7 @@ export default function SnowCatcher({
   const [foundFragment, setFoundFragment] = useState("");
   const [isShaking, setIsShaking] = useState(false);
   const [speed, setSpeed] = useState(3);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | null>(null);
 
   const currentLetterIndex = blocks.length;
   const isComplete = blocks.length === TARGET_WORD.length;
